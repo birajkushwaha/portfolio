@@ -62,36 +62,84 @@ document.querySelectorAll('.section, .project-card, .skill-category, .timeline-i
     observer.observe(el);
 });
 
-// Add the fade-in class style dynamically or assume it's handled by the transition above
-// Actually, I need to define the 'fade-in' class behavior.
-// Let's just modify the element directly in the observer callback for simplicity
-// or add a style block.
+// Typewriter Effect
+const textElement = document.getElementById('typing-text');
+const phrases = ["Frontend Developer", "Software Engineer", "CS Undergraduate", "Tech Enthusiast"];
+let phraseIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+let typeSpeed = 100;
 
-const styleSheet = document.createElement("style");
-styleSheet.textContent = `
-    .fade-in {
-        opacity: 1 !important;
-        transform: translateY(0) !important;
+function type() {
+    const currentPhrase = phrases[phraseIndex];
+
+    if (isDeleting) {
+        textElement.textContent = currentPhrase.substring(0, charIndex - 1);
+        charIndex--;
+        typeSpeed = 50; // Faster deletion
+    } else {
+        textElement.textContent = currentPhrase.substring(0, charIndex + 1);
+        charIndex++;
+        typeSpeed = 100; // Normal typing speed
     }
-    
-    @media (max-width: 768px) {
-        .nav-links.active {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            top: 70px;
-            left: 0;
-            width: 100%;
-            background: var(--surface-color);
-            padding: 2rem;
-            border-bottom: 1px solid var(--border-color);
-            animation: slideDown 0.3s ease forwards;
-        }
-        
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+
+    if (!isDeleting && charIndex === currentPhrase.length) {
+        isDeleting = true;
+        typeSpeed = 2000; // Pause at end of phrase
+    } else if (isDeleting && charIndex === 0) {
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        typeSpeed = 500; // Pause before typing new phrase
     }
-`;
-document.head.appendChild(styleSheet);
+
+    setTimeout(type, typeSpeed);
+}
+
+// Start Typewriter
+document.addEventListener('DOMContentLoaded', type);
+
+// Initialize Vanilla Tilt
+VanillaTilt.init(document.querySelectorAll(".project-card"), {
+    max: 15,
+    speed: 400,
+    glare: true,
+    "max-glare": 0.2,
+});
+
+// Check if skill categories exist and add tilt to them too for extra effect
+const skillCategories = document.querySelectorAll(".skill-category");
+if (skillCategories.length > 0) {
+    VanillaTilt.init(skillCategories, {
+        max: 10,
+        speed: 300,
+    });
+}
+
+// Magnetic Buttons Effect
+const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .social-links a');
+
+buttons.forEach(btn => {
+    btn.addEventListener('mousemove', (e) => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+
+        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+    });
+
+    btn.addEventListener('mouseleave', () => {
+        btn.style.transform = 'translate(0, 0)';
+    });
+});
+
+// Parallax Background Effect
+window.addEventListener('scroll', () => {
+    const scrollPosition = window.scrollY;
+    const blobs = document.querySelectorAll('.hero-image-blob');
+
+    blobs.forEach(blob => {
+        blob.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+    });
+});
+
+
