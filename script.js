@@ -9,11 +9,11 @@ window.addEventListener('mousemove', (e) => {
     cursorDot.style.left = `${posX}px`;
     cursorDot.style.top = `${posY}px`;
 
-    // Outline follows with a slight delay (using animate for smoothness)
+    // Outline follows with a slight delay
     cursorOutline.animate({
         left: `${posX}px`,
         top: `${posY}px`
-    }, { duration: 500, fill: "forwards" });
+    }, { duration: 250, fill: "forwards" });
 });
 
 // Mobile Menu
@@ -33,17 +33,11 @@ document.querySelectorAll('.nav-links a').forEach(link => {
     });
 });
 
-// Add active class to mobile menu for styling
-// We need to add some CSS for this in style.css, but let's just toggle a class here.
-// The CSS I wrote earlier hides .nav-links on mobile. I need to add the active state CSS.
-// I'll update style.css in a bit or just add it via JS if I can't edit.
-// Wait, I can edit style.css. I'll do that after this.
-
 // Scroll Animations
 const observerOptions = {
     root: null,
     rootMargin: '0px',
-    threshold: 0.1
+    threshold: 0.05
 };
 
 const observer = new IntersectionObserver((entries, observer) => {
@@ -55,20 +49,20 @@ const observer = new IntersectionObserver((entries, observer) => {
     });
 }, observerOptions);
 
-document.querySelectorAll('.section, .project-card, .skill-category, .timeline-item').forEach(el => {
+document.querySelectorAll('.section, .project-card, .skill-category, .timeline-item, .experience-card, .cert-item').forEach(el => {
     el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+    el.style.transform = 'translateY(15px)';
+    el.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
     observer.observe(el);
 });
 
 // Typewriter Effect
 const textElement = document.getElementById('typing-text');
-const phrases = ["Frontend Developer", "Software Engineer", "CS Undergraduate", "Tech Enthusiast"];
+const phrases = ["Backend APIs", "Spring Boot Apps", "Java Solutions", "Software Systems"];
 let phraseIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
-let typeSpeed = 100;
+let typeSpeed = 80;
 
 function type() {
     const currentPhrase = phrases[phraseIndex];
@@ -76,20 +70,20 @@ function type() {
     if (isDeleting) {
         textElement.textContent = currentPhrase.substring(0, charIndex - 1);
         charIndex--;
-        typeSpeed = 50; // Faster deletion
+        typeSpeed = 40; // Faster deletion
     } else {
         textElement.textContent = currentPhrase.substring(0, charIndex + 1);
         charIndex++;
-        typeSpeed = 100; // Normal typing speed
+        typeSpeed = 80; // Normal typing speed
     }
 
     if (!isDeleting && charIndex === currentPhrase.length) {
         isDeleting = true;
-        typeSpeed = 2000; // Pause at end of phrase
+        typeSpeed = 1500; // Pause at end of phrase
     } else if (isDeleting && charIndex === 0) {
         isDeleting = false;
         phraseIndex = (phraseIndex + 1) % phrases.length;
-        typeSpeed = 500; // Pause before typing new phrase
+        typeSpeed = 400; // Pause before typing new phrase
     }
 
     setTimeout(type, typeSpeed);
@@ -98,25 +92,24 @@ function type() {
 // Start Typewriter
 document.addEventListener('DOMContentLoaded', type);
 
-// Initialize Vanilla Tilt
+// Initialize Vanilla Tilt on project cards
 VanillaTilt.init(document.querySelectorAll(".project-card"), {
-    max: 15,
-    speed: 400,
-    glare: true,
-    "max-glare": 0.2,
+    max: 10,
+    speed: 300,
+    glare: false
 });
 
-// Check if skill categories exist and add tilt to them too for extra effect
+// Initialize Vanilla Tilt on skill categories
 const skillCategories = document.querySelectorAll(".skill-category");
 if (skillCategories.length > 0) {
     VanillaTilt.init(skillCategories, {
-        max: 10,
+        max: 6,
         speed: 300,
     });
 }
 
 // Magnetic Buttons Effect
-const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .social-links a');
+const buttons = document.querySelectorAll('.btn-primary, .btn-secondary, .btn-outline, .btn-primary-menu, .social-links a');
 
 buttons.forEach(btn => {
     btn.addEventListener('mousemove', (e) => {
@@ -124,7 +117,7 @@ buttons.forEach(btn => {
         const x = e.clientX - rect.left - rect.width / 2;
         const y = e.clientY - rect.top - rect.height / 2;
 
-        btn.style.transform = `translate(${x * 0.3}px, ${y * 0.3}px)`;
+        btn.style.transform = `translate(${x * 0.25}px, ${y * 0.25}px)`;
     });
 
     btn.addEventListener('mouseleave', () => {
@@ -138,8 +131,6 @@ window.addEventListener('scroll', () => {
     const blobs = document.querySelectorAll('.hero-image-blob');
 
     blobs.forEach(blob => {
-        blob.style.transform = `translateY(${scrollPosition * 0.5}px)`;
+        blob.style.transform = `translateY(${scrollPosition * 0.3}px) rotate(${scrollPosition * 0.1}deg)`;
     });
 });
-
-
